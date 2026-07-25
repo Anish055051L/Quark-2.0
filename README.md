@@ -32,7 +32,7 @@ complex syntax.
 Run the interpreter.
 
 ``` bash
-QuarkInterpreter.py
+QuarkInterpreter2.0.py
 ```
 
 You'll see:
