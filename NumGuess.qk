@@ -1,0 +1,14 @@
+# Secret Number Game - Quark 2.0
+let attempts = 0
+let secret_num = random 1 20
+
+print Welcome to the Quark Number Guessing Game!
+print I have picked a number between 1 and 20.
+
+# Prompt player for guess
+input Enter guess: -> guess
+
+let attempts = math attempts + 1
+
+if guess == secret_num then print Congratulations! You guessed it in, attempts, attempts!
+if guess != secret_num then print Wrong! The actual number was, secret_num

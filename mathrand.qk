@@ -1,0 +1,3 @@
+let one = random 1 10
+let two = random 11 86
+let enkey = one*two

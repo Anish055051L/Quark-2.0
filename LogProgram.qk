@@ -1,0 +1,15 @@
+# Custom Log File Creator - Quark 1.4
+print Initialising Custom Logger System...
+
+# Prompt for filename and log entry
+input Enter log filename (e.g. my_notes.txt): -> log_filename
+input What is your project status? -> entry
+
+# Save entry and time to the custom filename variable
+append log_filename time
+append log_filename entry
+append log_filename ---------------------------
+
+print Log saved successfully!
+print Here is the full content of log_filename:
+read log_filename

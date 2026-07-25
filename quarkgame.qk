@@ -1,0 +1,40 @@
+# Quark 2.0 - Quiz Master
+let score = 0
+
+print =========================================
+print       WELCOME TO QUARK TRIVIA!           
+print =========================================
+
+input Enter your player name: -> player_name
+
+print Hello player_name! Let us begin the quiz.
+print -----------------------------------------
+
+# Question 1
+print Question 1: What planet is known as the Red Planet?
+input Your answer: -> q1
+if q1 == Mars then let score = math scr + 10
+if q1 == Mars then print Correct! (+10 pts)
+if q1 != Mars then print Wrong! The answer was Mars.
+
+print -----------------------------------------
+
+# Question 2
+print Question 2: What is 12 multiplied by 12?
+input Your answer: -> q2
+if q2 == 144 then let score = math scr + 10
+if q2 == 144 then print Correct! (+10 pts)
+if q2 != 144 then print Wrong! The answer was 144.
+
+print -----------------------------------------
+
+# Game Over & Save Score
+print Quiz Finished, player_name!
+print Your final score is: scr
+
+# Log result with custom filename variable
+append highscores.txt player_name
+append highscores.txt scr
+append highscores.txt ---------------------------
+
+print Your result has been saved to highscores.txt!
