@@ -182,6 +182,8 @@ def execute(line):
             with open(target + ".qk", "r") as file:
                 for file_line in file:
                     execute(file_line)
+            return
+            
         except FileNotFoundError:
             print(f"Error: '{target}' does not exist //Found By QuarkSaviour!")
 
