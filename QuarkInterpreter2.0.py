@@ -171,7 +171,16 @@ def execute(line):
                 for file_line in file:
                     execute(file_line)
         except FileNotFoundError:
-            print(f"Error: '{target}' does not exist //Found By QuarkSaviour 1.4")
+            print(f"Error: '{target}' does not exist //Found By QuarkSaviour!")
+
+    elif cmd == "game":
+        target = safe_substitute(arg.strip())
+        try:
+            with open(target + ".qk", "r") as file:
+                for file_line in file:
+                    execute(file_line)
+        except FileNotFoundError:
+            print(f"Error: '{target}' does not exist //Found By QuarkSaviour!")
 
     elif cmd == "read":
         target = safe_substitute(arg.strip())
@@ -179,7 +188,7 @@ def execute(line):
             with open(target, "r") as file:
                 print(file.read().strip())
         except FileNotFoundError:
-            print(f"Error: '{target}' does not exist //Found By QuarkSaviour 1.4")
+            print(f"Error: '{target}' does not exist //Found By QuarkSaviour!")
 
     elif cmd in ("write", "append"):
         mode = "w" if cmd == "write" else "a"
@@ -280,6 +289,7 @@ wait <seconds>
 random <min> <max>
 read <file>
 run <file>
+game <file>
 write <file> <content>
 append <file> <content>
 clear
@@ -294,4 +304,3 @@ while running:
     except (KeyboardInterrupt, EOFError):
         print("\nShell Stopped Working. Thank You For Using Quark!")
         sys.exit()
-
