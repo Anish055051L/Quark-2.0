@@ -216,16 +216,37 @@ def execute(line):
             print(f"{cmd.capitalize()} Error: {e} //Found By QuarkSaviour!")
 
     elif cmd == "input":
-        # Syntax: input <prompt text> -> <variable_name>
-        if " -> " in arg:
-            prompt_text, var_name = arg.split(" -> ", 1)
-            prompt_text = safe_substitute(prompt_text.strip())
-            var_name = var_name.strip()
-            variables[var_name] = input(prompt_text + " ")
-        else:
-            # Fallback for single-argument syntax: input <variable_name>
-            var_name = arg.strip()
-            variables[var_name] = input(f"Enter {var_name}: ")
+    # Syntax:
+    # input Prompt -> variable
+    # Variables are substituted ONLY if enclosed in single quotes.
+
+    if " -> " in arg:
+        prompt_text, var_name = arg.split(" -> ", 1)
+        var_name = var_name.strip()
+
+        # Same helper used by print
+        def replace_quoted_var(match):
+            var = match.group(1)
+
+            if var == "time":
+                return time.strftime("%H:%M:%S")
+
+            return str(variables.get(var, f"'{var}'"))
+
+        prompt_text = prompt_text.strip()
+
+        # Only replace variables inside single quotes
+        prompt_text = re.sub(
+            r"'([a-zA-Z_][a-zA-Z0-9_]*)'",
+            replace_quoted_var,
+            prompt_text,
+        )
+
+        variables[var_name] = input(prompt_text + " ")
+
+    else:
+        var_name = arg.strip()
+        variables[var_name] = input(f"Enter {var_name}: ")
 
     elif cmd == "list":
         for k, v in variables.items():
