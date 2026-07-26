@@ -156,7 +156,12 @@ def execute(line):
         help()
 
     elif cmd == "clear":
-        os.system("cls" if os.name == "nt" else "clear")
+        result = os.system("cls" if os.name == "nt" else "clear")
+
+        # If cls/clear didn't work (e.g. IDLE), simulate a clear
+        if result != 0:
+            print("\n" * 100)
+
 
     elif cmd == "time":
         print(time.strftime("%H:%M:%S"))
