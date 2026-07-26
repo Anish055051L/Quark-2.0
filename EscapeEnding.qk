@@ -1,0 +1,17 @@
+print
+print You crawl through a narrow tunnel.
+
+wait 2
+
+print Light!
+
+print
+
+print You escaped.
+
+print
+
+print =======================
+print ENDING
+print THE SURVIVOR
+print =======================

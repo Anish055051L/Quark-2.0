@@ -1,0 +1,16 @@
+print
+print You enter a flooded corridor.
+
+let luck = random 1 2
+
+if luck == 1 then print You found a rusty key.
+if luck == 2 then print Electricity sparks nearby.
+
+print
+print 1) Climb the stairs
+print 2) Walk through the water
+
+input Second choice -> c
+
+if c == 1 then game SecretEnding
+if c == 2 then game DoomEnding

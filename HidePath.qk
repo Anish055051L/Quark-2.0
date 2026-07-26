@@ -1,0 +1,18 @@
+print
+print You hide beneath a table.
+
+let luck = random 1 2
+
+if luck == 1 then print DOOM walks past...
+if luck == 2 then print DOOM almost sees you...
+
+print
+print You notice an air vent.
+
+print 1) Crawl inside
+print 2) Stay hidden
+
+input Second choice -> c
+
+if c == 1 then game EscapeEnding
+if c == 2 then game DoomEnding

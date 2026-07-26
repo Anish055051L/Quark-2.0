@@ -1,0 +1,21 @@
+print
+print ...
+
+wait 2
+
+print THUMP...
+
+wait 2
+
+print DOOM appears behind you.
+
+print
+
+print There is nowhere left to run.
+
+print
+
+print =======================
+print ENDING
+print CONSUMED
+print =======================

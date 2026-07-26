@@ -1,0 +1,17 @@
+print
+print You sprint into a dark hallway.
+
+let luck = random 1 2
+
+if luck == 1 then print You found a flashlight.
+if luck == 2 then print You tripped over broken glass.
+
+print
+print Ahead you see:
+print 1) Open the metal door
+print 2) Keep running
+
+input Second choice -> c
+
+if c == 1 then game EscapeEnding
+if c == 2 then game DoomEnding
