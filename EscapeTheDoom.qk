@@ -1,13 +1,10 @@
-#========================================
-# ESCAPE THE DOOM
-# Made for Quark 2.0
-#========================================
-
+#Make Sure To Download All The Files Of EscapeTheDoom(LeftPath.qk, RightPath.qk, etc) before playing it!
+#Run The QuarkInterpreter2.0.py And Type In The Command: game EscapeTheDoom
 print ============================================
-print            ESCAPE THE DOOM
-print          A QUARK 2.0 PROJECT
+print ESCAPE THE DOOM
+print A QUARK 2.0 PROJECT
 print ============================================
-print          
+print
 
 input What is your name? -> player
 
@@ -24,99 +21,12 @@ print THUMP...
 print
 print Something called DOOM is hunting you.
 print
-
-print Choose quickly...
-print
 print 1) Run Left
 print 2) Run Right
 print 3) Hide
 
 input > -> choice
 
-#------------------------------------
-# LEFT
-#------------------------------------
-
-if choice == 1 then print You sprint into a dark hallway.
-if choice == 1 then let leftluck = random 1 2
-
-if choice == 1 then if leftluck == 1 then print You discover a flashlight.
-if choice == 1 then if leftluck == 2 then print You trip over broken glass.
-
-if choice == 1 then print
-if choice == 1 then print Ahead is a metal door.
-if choice == 1 then print
-if choice == 1 then print 1) Open it
-if choice == 1 then print 2) Ignore it
-
-input Second choice -> choice2
-
-#------------------------------------
-# RIGHT
-#------------------------------------
-
-if choice == 2 then print You enter a flooded corridor.
-if choice == 2 then let rightluck = random 1 2
-
-if choice == 2 then if rightluck == 1 then print You find a rusty key.
-if choice == 2 then if rightluck == 2 then print Electricity sparks nearby.
-
-if choice == 2 then print
-if choice == 2 then print A staircase appears.
-if choice == 2 then print
-if choice == 2 then print 1) Go Upstairs
-if choice == 2 then print 2) Keep Running
-
-input Second choice -> choice3
-
-#------------------------------------
-# HIDE
-#------------------------------------
-
-if choice == 3 then print You hide beneath a table.
-if choice == 3 then let hideluck = random 1 2
-
-if choice == 3 then if hideluck == 1 then print DOOM walks past...
-if choice == 3 then if hideluck == 2 then print DOOM almost sees you...
-
-if choice == 3 then print
-if choice == 3 then print You notice an air vent.
-if choice == 3 then print
-if choice == 3 then print 1) Crawl inside
-if choice == 3 then print 2) Stay Hidden
-
-input Second choice -> choice4
-
-#====================================
-# FINAL RANDOM EVENT
-#====================================
-
-print
-print You hear DOOM getting closer...
-wait 2
-
-let ending = random 1 4
-
-if ending == 1 then print You find the exit just before DOOM arrives!
-if ending == 1 then print
-if ending == 1 then print ENDING: THE SURVIVOR
-
-if ending == 2 then print DOOM smashes through the wall.
-if ending == 2 then print There is nowhere left to run.
-if ending == 2 then print
-if ending == 2 then print ENDING: CONSUMED
-
-if ending == 3 then print Behind a hidden door you discover...
-if ending == 3 then print YOU created DOOM.
-if ending == 3 then print
-if ending == 3 then print ENDING: THE CREATOR
-
-if ending == 4 then print You activate the laboratory self-destruct.
-if ending == 4 then print DOOM is destroyed.
-if ending == 4 then print You barely escape alive.
-if ending == 4 then print
-if ending == 4 then print ENDING: HERO
-
-print
-print Thanks for playing,'player'
-print ============================================
+if choice == 1 then game LeftPath
+if choice == 2 then game RightPath
+if choice == 3 then game HidePath
