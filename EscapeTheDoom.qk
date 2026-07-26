@@ -1,4 +1,11 @@
-#Make Sure To Download All The Files Of EscapeTheDoom(LeftPath.qk, RightPath.qk, etc) before playing it!
+#Make Sure To Download All The Files Of EscapeTheDoom listed below before playing it
+#EscapeTheDoom.qk
+#LeftPath.qk
+#RightPath.qk
+#HidePath.qk
+#EscapeEnding.qk
+#DoomEnding.qk
+#SecretEnding.qk
 #Run The QuarkInterpreter2.0.py And Type In The Command: game EscapeTheDoom
 print ============================================
 print ESCAPE THE DOOM
