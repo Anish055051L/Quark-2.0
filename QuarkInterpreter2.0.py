@@ -17,11 +17,14 @@ running = True
 
 def safe_substitute(text):
     """
-    Replaces variable names with values safely by sorting by variable name length (longest first).
-    Prevents short names (e.g. 'a') from replacing parts of longer names (e.g. 'apple').
+    Replace ONLY whole variable names.
+    Variables inside quotes are ignored.
     """
+
     for name, value in sorted(variables.items(), key=lambda x: len(x[0]), reverse=True):
-        text = text.replace(name, str(value))
+        pattern = rf"\b{re.escape(name)}\b"
+        text = re.sub(pattern, str(value), text)
+
     return text
 
 def parse_print_item(item):
