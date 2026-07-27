@@ -1,0 +1,77 @@
+#Note: The Game Only Supports QuarkInterpreter 3.0
+# ==========================================
+# QUARK 3.0 RPG: THE CRYSTAL DUNGEON
+# ==========================================
+
+let player_hp = 100
+let player_gold = 0
+let monster_hp = 0
+let game_active = 1
+
+# --- FUNCTIONS ---
+
+fn show_stats
+    print -----------------------------------------
+    print [HERO STATS] HP: 'player_hp' | Gold: 'player_gold'
+    print -----------------------------------------
+fn end
+
+fn heal_hero
+    if player_gold >= 10 then let player_gold = math player_gold - 10
+    if player_gold >= 10 then let player_hp = math player_hp + 25
+    if player_gold >= 10 then print You drank a potion! Restored 25 HP.
+    if player_gold < 10 then print Not enough gold! Potions cost 10 gold.
+fn end
+
+fn battle_turn
+    let dmg = random 15 30
+    let monster_hp = math monster_hp - dmg
+    print You strike the monster for 'dmg' damage!
+    
+    if monster_hp > 0 then let m_dmg = random 5 15
+    if monster_hp > 0 then let player_hp = math player_hp - m_dmg
+    if monster_hp > 0 then print The monster counter-attacks for 'm_dmg' damage!
+fn end
+
+fn start_battle
+    let monster_hp = random 30 60
+    print -----------------------------------------
+    print A wild monster appears with 'monster_hp' HP!
+    
+    game loop monster_hp > 0
+        call show_stats
+        input Choose Action (1: Attack, 2: Heal) -> choice
+        
+        if choice == 1 then call battle_turn
+        if choice == 2 then call heal_hero
+        
+        # Player defeated
+        if player_hp <= 0 then let monster_hp = 0
+        if player_hp <= 0 then let game_active = 0
+    loop end
+
+    if player_hp > 0 then let loot = random 10 25
+    if player_hp > 0 then let player_gold = math player_gold + loot
+    if player_hp > 0 then print VICTORY! You defeated the monster and found 'loot' gold!
+fn end
+
+# --- MAIN GAME SETUP ---
+
+print Welcome to The Crystal Dungeon!
+wait 1
+
+game loop game_active == 1
+    call show_stats
+    print What would you like to do next?
+    input (1: Explore Dungeon, 2: Visit Shop, 3: Quit Game) -> action
+    
+    if action == 1 then call start_battle
+    if action == 2 then call heal_hero
+    if action == 3 then let game_active = 0
+    
+    # Check if player died during exploration
+    if player_hp <= 0 then print GAME OVER! You perished in the dungeon.
+loop end
+
+print Thank you for playing The Crystal Dungeon
+print Made With Quark 3.0
