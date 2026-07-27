@@ -1,4 +1,4 @@
-# Quark 3.0 Gaming Version (Fixed Function Block Matching)
+# Quark 3.0 Gaming Version (Fixed Nested 'if ... then call' Execution)
 import random
 import time
 import sys
@@ -248,7 +248,7 @@ def execute(line):
 
         if command_to_run:
             for _ in range(count):
-                execute(command_to_run)
+                run_code([command_to_run])
 
     elif cmd == "random":
         try:
@@ -347,7 +347,7 @@ def execute(line):
     elif cmd == "if":
         condition, _, command = arg.partition(" then ")
         if eval_condition(condition):
-            execute(command)
+            run_code([command])
 
     elif cmd == "import":
         try:
