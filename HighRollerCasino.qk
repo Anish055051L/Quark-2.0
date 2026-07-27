@@ -1,0 +1,45 @@
+#Supported By Only QuarkInterpreter 3.0 or higher versions in the future
+# ==========================================
+# QUARK 3.0: HIGH-ROLLER CASINO
+# ==========================================
+
+let wallet = 50
+let playing = 1
+
+fn play_dice
+    input How much do you want to bet? -> bet
+    if bet > wallet then print You cannot bet more than you have!
+    
+    if bet <= wallet then let roll = random 1 6
+    if bet <= wallet then print You rolled a 'roll'!
+    
+    # Rolls 4, 5, 6 win double; 1, 2, 3 lose bet
+    if bet <= wallet then if roll >= 4 then let winnings = math bet * 2
+    if bet <= wallet then if roll >= 4 then let wallet = math wallet + winnings
+    if bet <= wallet then if roll >= 4 then print WINNER! You won 'winnings' gold!
+    
+    if bet <= wallet then if roll < 4 then let wallet = math wallet - bet
+    if bet <= wallet then if roll < 4 then print UNLUCKY! You lost your bet.
+fn end
+
+fn menu
+    print -----------------------------------------
+    print [CASINO WALLET] Gold: 'wallet'
+    print -----------------------------------------
+    input (1: Play High-Dice, 2: Walk Away) -> opt
+    
+    if opt == 1 then call play_dice
+    if opt == 2 then let playing = 0
+fn end
+
+print Welcome to the High-Roller Casino!
+
+game loop playing == 1
+    if wallet <= 0 then print You ran out of gold! Security kicked you out.
+    if wallet <= 0 then let playing = 0
+    
+    if wallet > 0 then call menu
+loop end
+
+print Thanks for stopping by the High Roller Casino!
+print Made With Quark 3.0
