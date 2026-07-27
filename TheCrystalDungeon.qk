@@ -55,6 +55,12 @@ fn start_battle
     if player_hp > 0 then print VICTORY! You defeated the monster and found 'loot' gold!
 fn end
 
+fn handle_action
+    if action == 1 then call start_battle
+    if action == 2 then call heal_hero
+    if action == 3 then let game_active = 0
+fn end
+
 # --- MAIN GAME SETUP ---
 
 print Welcome to The Crystal Dungeon!
@@ -65,9 +71,7 @@ game loop game_active == 1
     print What would you like to do next?
     input (1: Explore Dungeon, 2: Visit Shop, 3: Quit Game) -> action
     
-    if action == 1 then call start_battle
-    if action == 2 then call heal_hero
-    if action == 3 then let game_active = 0
+    call handle_action
     
     # Check if player died during exploration
     if player_hp <= 0 then print GAME OVER! You perished in the dungeon.
