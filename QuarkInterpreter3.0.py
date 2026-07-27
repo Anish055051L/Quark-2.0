@@ -1,4 +1,4 @@
-# Quark 3.0 Gaming Version (Fixed Control Flow, Space Parsing & Block Scanning)
+# Quark 3.0 Gaming Version (Fixed Function Block Matching)
 import random
 import time
 import sys
@@ -107,8 +107,9 @@ def find_matching_block_end(code_lines, start_idx, start_keyword, end_keyword):
     for i in range(start_idx, len(code_lines)):
         l = sanitize_line(code_lines[i])
         
-        if (start_keyword == "fn" and l.startswith("fn ")) or \
-           (start_keyword == "game loop" and l.startswith("game loop")):
+        if start_keyword == "fn" and l.startswith("fn ") and not l.startswith("fn end"):
+            depth += 1
+        elif start_keyword == "game loop" and l.startswith("game loop"):
             depth += 1
         elif l == end_keyword:
             depth -= 1
@@ -132,7 +133,7 @@ def run_code(code_lines):
             continue
 
         # 1. FUNCTION DEFINITION
-        if line.startswith("fn "):
+        if line.startswith("fn ") and not line.startswith("fn end"):
             func_name = line[3:].strip()
             end_idx = find_matching_block_end(code_lines, line_idx, "fn", "fn end")
             
@@ -391,7 +392,7 @@ while running:
             continue
 
         # Multiline block collector for loops and functions in interactive mode
-        if sanitized_input.startswith("game loop") or sanitized_input.startswith("fn "):
+        if (sanitized_input.startswith("game loop") or sanitized_input.startswith("fn ")) and not sanitized_input.startswith("fn end"):
             buffer = [sanitized_input]
             depth = 1
             start_kw = "game loop" if sanitized_input.startswith("game loop") else "fn"
@@ -400,7 +401,9 @@ while running:
             while depth > 0:
                 sub_line = sanitize_line(input("... "))
                 buffer.append(sub_line)
-                if sub_line.startswith(start_kw):
+                if start_kw == "fn" and sub_line.startswith("fn ") and not sub_line.startswith("fn end"):
+                    depth += 1
+                elif start_kw == "game loop" and sub_line.startswith("game loop"):
                     depth += 1
                 elif sub_line == end_kw:
                     depth -= 1
