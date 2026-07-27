@@ -1,4 +1,4 @@
-# Quark 3.0 Gaming Version (Fixed Control Flow & Space Parsing)
+# Quark 3.0 Gaming Version (Fixed Control Flow, Space Parsing & Block Scanning)
 import random
 import time
 import sys
@@ -99,21 +99,26 @@ def eval_condition(condition_expr):
         return False
 
 def find_matching_block_end(code_lines, start_idx, start_keyword, end_keyword):
-    """Scans forward to find matching block end tags for loops or functions."""
+    """
+    Scans forward to find matching block end tags for loops or functions.
+    Uses strict prefix/exact matching to avoid swallowing main code.
+    """
     depth = 0
     for i in range(start_idx, len(code_lines)):
         l = sanitize_line(code_lines[i])
-        if l.startswith(start_keyword):
+        
+        if (start_keyword == "fn" and l.startswith("fn ")) or \
+           (start_keyword == "game loop" and l.startswith("game loop")):
             depth += 1
         elif l == end_keyword:
             depth -= 1
             if depth == 0:
                 return i
-    return len(code_lines)
+    return start_idx
 
 def run_code(code_lines):
     """
-    Executes lines with support for loops, functions, and non-breaking space sanitization.
+    Executes lines with strict block bounds, function tracking, and loop support.
     """
     line_idx = 0
     total_lines = len(code_lines)
@@ -126,15 +131,16 @@ def run_code(code_lines):
             line_idx += 1
             continue
 
-        # 1. FUNCTION DEFINITION (Store code without executing)
+        # 1. FUNCTION DEFINITION
         if line.startswith("fn "):
             func_name = line[3:].strip()
             end_idx = find_matching_block_end(code_lines, line_idx, "fn", "fn end")
             
-            # Extract function body lines
+            if end_idx == line_idx:
+                print(f"Syntax Error: Missing 'fn end' for function '{func_name}' //Found By QuarkSaviour!")
+                break
+                
             functions[func_name] = code_lines[line_idx + 1 : end_idx]
-            
-            # Skip past 'fn end'
             line_idx = end_idx + 1
             continue
 
@@ -155,12 +161,16 @@ def run_code(code_lines):
             else:
                 if loop_stack and loop_stack[-1] == line_idx:
                     loop_stack.pop()
-                line_idx = find_matching_block_end(code_lines, line_idx, "game loop", "loop end")
+                end_idx = find_matching_block_end(code_lines, line_idx, "game loop", "loop end")
+                if end_idx == line_idx:
+                    print("Syntax Error: Missing 'loop end' //Found By QuarkSaviour!")
+                    break
+                line_idx = end_idx
 
         # 4. GAME LOOP END
         elif line == "loop end":
             if loop_stack:
-                line_idx = loop_stack[-1] - 1  # Rewind to loop start without destroying reference
+                line_idx = loop_stack[-1] - 1
 
         # 5. ALL OTHER COMMANDS
         else:
