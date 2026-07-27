@@ -1,4 +1,4 @@
-# Quark 3.0 Gaming Version (With Loops & Functions)
+# Quark 3.0 Gaming Version (Fixed Control Flow & Space Parsing)
 import random
 import time
 import sys
@@ -8,13 +8,20 @@ import re
 variables = {}
 functions = {}  # Stores custom functions: { "func_name": [lines_of_code] }
 
-print("Welcome To Quark 2.0, The Future Of Programming! ")
+print("Welcome To Quark 3.0, The Future Of Programming! ")
 time.sleep(1)
 print("Initialising Shell... ")
-time.sleep(2)
+time.sleep(1)
 print("Done!")
 
 running = True
+
+def sanitize_line(text):
+    """
+    Replaces non-breaking spaces (\xa0) with standard spaces 
+    and strips leading/trailing whitespace.
+    """
+    return text.replace('\xa0', ' ').strip()
 
 def safe_substitute(text):
     """
@@ -24,14 +31,13 @@ def safe_substitute(text):
     for name, value in sorted(variables.items(), key=lambda x: len(x[0]), reverse=True):
         pattern = rf"\b{re.escape(name)}\b"
         text = re.sub(pattern, str(value), text)
-
     return text
 
 def parse_print_item(item):
     """
     Parses individual items in a print command.
     """
-    item = item.strip()
+    item = sanitize_line(item)
 
     if item.startswith("math "):
         expr = safe_substitute(item[5:])
@@ -96,7 +102,7 @@ def find_matching_block_end(code_lines, start_idx, start_keyword, end_keyword):
     """Scans forward to find matching block end tags for loops or functions."""
     depth = 0
     for i in range(start_idx, len(code_lines)):
-        l = code_lines[i].strip()
+        l = sanitize_line(code_lines[i])
         if l.startswith(start_keyword):
             depth += 1
         elif l == end_keyword:
@@ -107,14 +113,14 @@ def find_matching_block_end(code_lines, start_idx, start_keyword, end_keyword):
 
 def run_code(code_lines):
     """
-    Executes lines with support for loops and functions.
+    Executes lines with support for loops, functions, and non-breaking space sanitization.
     """
     line_idx = 0
     total_lines = len(code_lines)
     loop_stack = []
 
     while line_idx < total_lines:
-        line = code_lines[line_idx].strip()
+        line = sanitize_line(code_lines[line_idx])
 
         if not line or line.startswith("#"):
             line_idx += 1
@@ -144,14 +150,17 @@ def run_code(code_lines):
         elif line.startswith("game loop"):
             condition_expr = line[len("game loop"):].strip()
             if eval_condition(condition_expr):
-                loop_stack.append(line_idx)
+                if not loop_stack or loop_stack[-1] != line_idx:
+                    loop_stack.append(line_idx)
             else:
+                if loop_stack and loop_stack[-1] == line_idx:
+                    loop_stack.pop()
                 line_idx = find_matching_block_end(code_lines, line_idx, "game loop", "loop end")
 
         # 4. GAME LOOP END
         elif line == "loop end":
             if loop_stack:
-                line_idx = loop_stack.pop() - 1
+                line_idx = loop_stack[-1] - 1  # Rewind to loop start without destroying reference
 
         # 5. ALL OTHER COMMANDS
         else:
@@ -160,7 +169,7 @@ def run_code(code_lines):
         line_idx += 1
 
 def execute(line):
-    line = line.strip()
+    line = sanitize_line(line)
 
     if not line or line.startswith("#"):
         return
@@ -257,16 +266,21 @@ def execute(line):
     elif cmd in ("run", "game"):
         target = safe_substitute(arg.strip())
         ext = ".qk" if cmd == "game" and not target.endswith(".qk") else ""
+        filename = target + ext
         try:
-            with open(target + ext, "r") as file:
-                run_code(file.readlines())
+            with open(filename, "r", encoding="utf-8") as file:
+                lines = file.readlines()
+                if not lines:
+                    print(f"Warning: '{filename}' is empty! //Found By QuarkSaviour!")
+                else:
+                    run_code(lines)
         except FileNotFoundError:
-            print(f"Error: '{target}' does not exist //Found By QuarkSaviour!")
+            print(f"Error: '{filename}' does not exist //Found By QuarkSaviour!")
 
     elif cmd == "read":
         target = safe_substitute(arg.strip())
         try:
-            with open(target, "r") as file:
+            with open(target, "r", encoding="utf-8") as file:
                 print(file.read().strip())
         except FileNotFoundError:
             print(f"Error: '{target}' does not exist //Found By QuarkSaviour!")
@@ -288,7 +302,7 @@ def execute(line):
             text_to_save = safe_substitute(content)
 
         try:
-            with open(filename, mode) as file:
+            with open(filename, mode, encoding="utf-8") as file:
                 file.write(text_to_save + "\n")
         except Exception as e:
             print(f"{cmd.capitalize()} Error: {e} //Found By QuarkSaviour!")
@@ -326,7 +340,7 @@ def execute(line):
 
     elif cmd == "import":
         try:
-            with open(arg + ".qk", "r") as file:
+            with open(arg + ".qk", "r", encoding="utf-8") as file:
                 run_code(file.readlines())
         except FileNotFoundError:
             print("Module not found. Found By QuarkSaviour!")
@@ -360,19 +374,21 @@ stop / exit / kill
 
 while running:
     try:
-        user_input = input(">>> ").strip()
-        if not user_input:
+        user_input = input(">>> ")
+        sanitized_input = sanitize_line(user_input)
+        
+        if not sanitized_input:
             continue
 
         # Multiline block collector for loops and functions in interactive mode
-        if user_input.startswith("game loop") or user_input.startswith("fn "):
-            buffer = [user_input]
+        if sanitized_input.startswith("game loop") or sanitized_input.startswith("fn "):
+            buffer = [sanitized_input]
             depth = 1
-            start_kw = "game loop" if user_input.startswith("game loop") else "fn"
+            start_kw = "game loop" if sanitized_input.startswith("game loop") else "fn"
             end_kw = "loop end" if start_kw == "game loop" else "fn end"
 
             while depth > 0:
-                sub_line = input("... ").strip()
+                sub_line = sanitize_line(input("... "))
                 buffer.append(sub_line)
                 if sub_line.startswith(start_kw):
                     depth += 1
@@ -381,7 +397,7 @@ while running:
 
             run_code(buffer)
         else:
-            run_code([user_input])
+            run_code([sanitized_input])
 
     except (KeyboardInterrupt, EOFError):
         print("\nShell Stopped Working. Thank You For Using Quark!")
